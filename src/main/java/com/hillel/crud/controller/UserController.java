@@ -62,7 +62,7 @@ public class UserController {
                 if (value.getPassword().equals(user.getPassword())) {
                     user = value;
 
-                    return goToOwnPage(user,model);
+                    return goToOwnPage(user, model);
                 }
 
             }
@@ -71,14 +71,15 @@ public class UserController {
         System.out.println("Вход не выполнен");
         return "redirect:/";
     }
-//    @GetMapping("/own-page")
+
+    //    @GetMapping("/own-page")
 //    public String createOwnPage(User user){
 //
 //        return "own-page";
 //    }
     ////////////////////////////////////////////////////////
-    public String goToOwnPage(User user,Model model) {
-        System.out.println("Вход выполнен пользователем "+user);
+    public String goToOwnPage(User user, Model model) {
+        System.out.println("Вход выполнен пользователем " + user);
         model.addAttribute("users", user);
         return "own-page";
     }
@@ -106,25 +107,24 @@ public class UserController {
         System.out.println("Ошибка");
         return "/";
     }
-    @GetMapping("/dataToConsole/{name}")
-    public String dataToConsole(@PathVariable("name") String name,BindingResult result,Model model){
-        if (result.hasErrors()) {
-            return "login-user";
-        }
-        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
 
-        for (User value : users) {
-            System.out.println(value);
-            if (value.getName().equals(name)) {
-                    System.out.println("print "+value);
-                    return goToOwnPage(value,model);
-                }
+    @GetMapping("/dataToConsole/{id}")
+    public String dataToConsole(@PathVariable("id") int id, Model model) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
+        model.addAttribute("user", user);
 
-        }
 
         return "redirect:/";
     }
 
+    @PostMapping("/printDataToConsole/{id}")
+    public String PrintDataToConsole(@PathVariable("id") int id, @Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "dataToConsole";
+        }
+        System.out.println(user);
+        return "own-page";
+    }
 }
-
