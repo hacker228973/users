@@ -5,15 +5,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-@Entity(name="users")
+
+@Entity(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
-    @NotBlank(message="Name is mandatory")
+    @NotBlank(message = "Name is mandatory")
     String name;
-    @NotBlank(message="Password is mandatory")
-    int password;
+    @NotBlank(message = "Password is mandatory")
+    String password;
+
+
+
+
 
     public void setId(int id) {
         this.id = id;
@@ -23,7 +28,7 @@ public class User {
         this.name = name;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -35,16 +40,28 @@ public class User {
         return name;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public User(int id, String name, int password) {
+    public User(int id, String name, String password, int number) {
         this.id = id;
         this.name = name;
         this.password = password;
+
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+
+                '}';
     }
 
     public User() {
     }
+
 }

@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>My Site</title>
 </head>
 <body>
 <center><h3>Добро пожаловать на сайт My Site</h3></center>
-<center><a href="/registration-user"><h2>Зарегистрироваться</h2></a></center>
+
+<center>
+    <h1>Наши пользователи</h1>
+    <div th:switch="${users}">
+        <h2 th:case="null">No users yet!</h2>
+        <div th:case="*">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Password</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.password}"></td>
+                    <td th:text="${user.id}"></td>
+                    <td><a th:href="@{/edit-user/{id}(id=${user.id})}">Edit</a></td>
+                    <td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <center><a href="/registration-user"><h2>Зарегистрироваться</h2></a></center>
+        <a href="/login-user"><h2>Войти</h2></a>
+        <a href="/h2"><h2>Войти в базу данных</h2></a>
+    </div>
+</center>>
 </body>
 </html>
