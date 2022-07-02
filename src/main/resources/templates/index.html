@@ -7,32 +7,11 @@
 <body>
 <center><h3>Добро пожаловать на сайт My Site</h3></center>
 
-<center>
-    <h1>Наши пользователи</h1>
-    <div th:switch="${users}">
-        <h2 th:case="null">No users yet!</h2>
-        <div th:case="*">
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Password</th>
-                    <th>ID</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${users}">
-                    <td th:text="${user.name}"></td>
-                    <td th:text="${user.password}"></td>
-                    <td th:text="${user.id}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <center><a href="/registration-user"><h2>Зарегистрироваться</h2></a></center>
-        <a href="/login-user"><h2>Войти</h2></a>
-        <a href="/h2"><h2>Войти в базу данных</h2></a>
-    </div>
+
+<a href="/registration-user"><h2>Зарегистрироваться</h2></a>
+<a href="/login-user"><h2>Войти</h2></a>
+<a href="/h2"><h2>Войти в базу данных</h2></a>
+
 </center>
 </body>
 </html>

@@ -9,25 +9,19 @@
 
 
     <table>
-
+        <tr>
+            <th>Name</th>
+            <th>Password</th>
+            <th>ID</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
         <tbody>
         <tr th:each="user : ${users}">
             <td th:text="${user.name}"></td>
             <td th:text="${user.password}"></td>
             <td th:text="${user.id}"></td>
-            <td><a th:href="@{/edit-user/{id}(id=${user.id})}">Edit</a></td>
-            <td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
-        </tr>
-        </tbody>
 
-    </table>
-    <table>
-
-        <tbody>
-        <tr th:each="user : ${user}">
-            <td th:text="${user.name}"></td>
-            <td th:text="${user.password}"></td>
-            <td th:text="${user.id}"></td>
             <td><a th:href="@{/edit-user/{id}(id=${user.id})}">Edit</a></td>
             <td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
         </tr>

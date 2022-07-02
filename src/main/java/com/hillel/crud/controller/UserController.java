@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 
 @Controller
 public class UserController {
-    static String nameAdmin="Nik";
+    static String nameAdmin = "Nik";
 
     ////////////////////////////////////////////////////////
     @GetMapping("/registration-user")
@@ -78,7 +79,8 @@ public class UserController {
         model.addAttribute("user", user);
         return "own-page";
     }
-    public String goToAdminPage(User user, Model model){
+
+    public String goToAdminPage(User user, Model model) {
         model.addAttribute("users", userRepository.findAll());
 
         return "admin-page";
@@ -108,52 +110,82 @@ public class UserController {
         model.addAttribute("user", user);
 
 
-        return goToOwnPage(user,model);
+        return goToOwnPage(user, model);
     }
+
     @GetMapping("/admin-page/{id}")
-    public String adminPage(@PathVariable("id") int id, Model model){
+    public String adminPage(@PathVariable("id") int id, Model model) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        if(user.getName().equals(nameAdmin)){
-            return goToAdminPage(user,model);
+        if (user.getName().equals(nameAdmin)) {
+            return goToAdminPage(user, model);
         }
-        return goToOwnPage(user,model);
+        return goToOwnPage(user, model);
     }
+
     @GetMapping("/edit-user/{id}")
-    public String editUserForm(User user){
+    public String editUserForm(User user) {
         return "edit-user";
     }
-    @PostMapping("/edit/{id}")
-    public String editUser(@PathVariable("id") int id,@Valid User user,Model model){
 
-        user.setName(user.getName());
-        user.setPassword(user.getPassword());
+    @PostMapping("/edit/{id}")
+    public String editUser(@PathVariable("id") int id, User user, Model model) {
+        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
+        for (User value : users) {
+            if (user.getName().equals(value.getName())) {
+                return goToAdminPageWithAdminProfile(model);
+            }
+        }
+        User userById = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        if (userById.getName().equals(nameAdmin)) {
+            return goToAdminPageWithAdminProfile(model);
+        }
+        System.out.println("Изменен пользователь " + userById);
+        if (user.getName().equals("Оставить")||user.getName().equals("")) {
+            user.setName(userById.getName());
+        }
+        if (user.getPassword().equals("Оставить")||user.getPassword().equals("")) {
+            user.setPassword(userById.getPassword());
+        }
         userRepository.save(user);
 
+        System.out.println("На " + user);
+
+
+        return goToAdminPageWithAdminProfile(model);
+    }
+
+    public String goToAdminPageWithAdminProfile(Model model) {
+        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
+        for (User value : users) {
+            if (value.getName().equals(nameAdmin)) {
+
+                User user = value;
+
+                return goToAdminPage(user, model);
+            }
+
+
+        }
         return "redirect:/";
     }
+
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") int id, Model model) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
 
-        if(!user.getName().equals(nameAdmin)){
+        if (!user.getName().equals(nameAdmin)) {
             userRepository.deleteById(id);
-            System.out.println("Удален пользователь "+user);
+            System.out.println("Удален пользователь " + user);
         }
         ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
-        for (User value : users) {
-            if (value.getName().equals(nameAdmin)) {
-
-                    user = value;
-
-                    return goToOwnPage(user, model);
-                }
 
 
-        }
+        return goToAdminPageWithAdminProfile(model);
 
-        return "redirect:/";
+
     }
 }
