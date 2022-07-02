@@ -6,20 +6,20 @@
 </head>
 <body>
 
-<center><a th:href="@{/requestToBD/{id}(id=${user.id})}"><h2>Войти в базу данных</h2></a></center>
-<!--<center><a th:href="@{/dataToConsole/{id}(id=${user.id})}"  ><h2>Вывести данные в консоль</h2></a></center>-->
-<center><a th:href="@{/dataToConsole/{name}(name=${user.name})}"><h2>Вывести данные в консоль</h2></a></center>
+
+
+
 <center>
 
 
-    <tr th:each="user : ${users}">
+    <tr th:each="user : ${user}">
         <td th:text="${user.name}"></td>
         <td th:text="${user.password}"></td>
         <td th:text="${user.id}"></td>
-        <td><a th:href="@{/edit-user/{id}(id=${user.id})}">Edit</a></td>
-        <td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
+
 
         <td><a th:href="@{/dataToConsole/{id}(id=${user.id})}">Вывести данные в консоль</a></td>
+        <a th:href="@{/admin-page/{id}(id=${user.id})}">Админ страница</a>
     </tr>
 </center>
 

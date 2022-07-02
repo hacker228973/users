@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Controller
 public class UserController {
-
+    static String nameAdmin="Nik";
 
     ////////////////////////////////////////////////////////
     @GetMapping("/registration-user")
@@ -61,7 +61,7 @@ public class UserController {
             if (value.getName().equals(user.getName())) {
                 if (value.getPassword().equals(user.getPassword())) {
                     user = value;
-
+                    System.out.println("Вход выполнен пользователем " + user);
                     return goToOwnPage(user, model);
                 }
 
@@ -72,16 +72,16 @@ public class UserController {
         return "redirect:/";
     }
 
-    //    @GetMapping("/own-page")
-//    public String createOwnPage(User user){
-//
-//        return "own-page";
-//    }
     ////////////////////////////////////////////////////////
     public String goToOwnPage(User user, Model model) {
-        System.out.println("Вход выполнен пользователем " + user);
-        model.addAttribute("users", user);
+
+        model.addAttribute("user", user);
         return "own-page";
+    }
+    public String goToAdminPage(User user, Model model){
+        model.addAttribute("users", userRepository.findAll());
+
+        return "admin-page";
     }
 
     @GetMapping
@@ -98,33 +98,62 @@ public class UserController {
     }
 
     ////////////////////////////////////////////////////////
-    @PostMapping("/requestToBD")
-    public String completeRequestToBD(@Valid User user) {
-        if (user.getName().equals("Nik")) {
-            System.out.println("Вход в базу данных произведен");
-            return "h2";
-        }
-        System.out.println("Ошибка");
-        return "/";
-    }
+
 
     @GetMapping("/dataToConsole/{id}")
     public String dataToConsole(@PathVariable("id") int id, Model model) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-
+        System.out.println(user);
         model.addAttribute("user", user);
 
 
+        return goToOwnPage(user,model);
+    }
+    @GetMapping("/admin-page/{id}")
+    public String adminPage(@PathVariable("id") int id, Model model){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        if(user.getName().equals(nameAdmin)){
+            return goToAdminPage(user,model);
+        }
+        return goToOwnPage(user,model);
+    }
+    @GetMapping("/edit-user/{id}")
+    public String editUserForm(User user){
+        return "edit-user";
+    }
+    @PostMapping("/edit/{id}")
+    public String editUser(@PathVariable("id") int id,@Valid User user,Model model){
+
+        user.setName(user.getName());
+        user.setPassword(user.getPassword());
+        userRepository.save(user);
+
         return "redirect:/";
     }
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") int id, Model model) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
-    @PostMapping("/printDataToConsole/{id}")
-    public String PrintDataToConsole(@PathVariable("id") int id, @Valid User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "dataToConsole";
+
+        if(!user.getName().equals(nameAdmin)){
+            userRepository.deleteById(id);
+            System.out.println("Удален пользователь "+user);
         }
-        System.out.println(user);
-        return "own-page";
+        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
+        for (User value : users) {
+            if (value.getName().equals(nameAdmin)) {
+
+                    user = value;
+
+                    return goToOwnPage(user, model);
+                }
+
+
+        }
+
+        return "redirect:/";
     }
 }

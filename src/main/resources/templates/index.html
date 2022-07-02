@@ -17,8 +17,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Password</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th>ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,8 +25,6 @@
                     <td th:text="${user.name}"></td>
                     <td th:text="${user.password}"></td>
                     <td th:text="${user.id}"></td>
-                    <td><a th:href="@{/edit-user/{id}(id=${user.id})}">Edit</a></td>
-                    <td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
                 </tr>
                 </tbody>
             </table>
